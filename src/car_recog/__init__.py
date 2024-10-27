@@ -52,13 +52,13 @@ def main_cli():
             mean, std = json.load(f)
 
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize(224),
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
     ])
 
     img = transform(Image.open(args.input_image).convert("RGB"))
 
-    output = net(img.resize(1, 3, 224, 224).to(device))
+    output = net(img.unsqueeze(0).to(device))
     _, predicted = torch.max(output, 1)
     print(CLASSES[predicted[0]])
